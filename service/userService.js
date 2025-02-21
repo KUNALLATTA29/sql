@@ -1,6 +1,7 @@
 import {findUserByEmailId, saveUser, findUserById,updateUserById,deleteUserById} from '../repository/userRepository.js'
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import User from '../models/userModel.js'
 
 
 export const register = async(data)=>{
@@ -12,7 +13,7 @@ export const register = async(data)=>{
 
         const hashedPassword = await bcrypt.hash(data.password, 10);
 
-        let newData = {name,email,password:hashedPassword}
+        let newData = {name:data.name,email:data.email,password:hashedPassword}
 
         const newUser = await saveUser(newData)
 
@@ -70,4 +71,8 @@ export const deleteUser = async (id) => {
 
     await deleteUserById(id);
     return user;
+};
+
+export const getAllUsers = async () => {
+    return await User.findAll({ attributes: ['id', 'name'] });
 };
